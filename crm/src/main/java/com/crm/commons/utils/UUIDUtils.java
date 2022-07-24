@@ -17,6 +17,7 @@ public class UUIDUtils {
 
     public void test(){
         System.out.println("master");
+        System.out.println("hot");
     }
 
 }
