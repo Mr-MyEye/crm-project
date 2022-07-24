@@ -16,7 +16,7 @@ public class UUIDUtils {
     }
 
     public void test(){
-        System.out.println("test");
+        System.out.println("hot");
     }
 
 }
