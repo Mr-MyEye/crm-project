@@ -23,4 +23,9 @@ public class ActivityServiceImpl implements ActivityService {
     public int insert(Activity row) {
         return activityMapper.insert(row);
     }
+
+    @Override
+    public int saveCreateActivity(Activity activity) {
+        return activityMapper.insertActivity(activity);
+    }
 }

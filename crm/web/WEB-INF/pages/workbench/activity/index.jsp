@@ -23,8 +23,74 @@
         <script type="text/javascript">
 
             $(function () {
-
-
+                $("#createActivityByButton").click(function () {
+                    $("#createActivityModal").modal("show");
+                });
+                $("#saveCreateActivity").click(function () {
+                    var name = $.trim($("#create-marketActivityName").val());
+                    var owner = $("#create-marketActivityOwner").val();
+                    var startDate = $("#create-startTime").val();
+                    var endDate = $("#create-endTime").val();
+                    var cost = $.trim($("#create-cost").val());
+                    let desciption = $.trim($("#create-describe").val());
+                //    表单验证
+                    if (owner == null){
+                        alert("所有者不能为空");
+                        return;
+                    }else if (name == null){
+                        alert("名称不能为空");
+                        return;
+                    }
+                    if (startDate != null || endDate != null){
+                        if (endDate < startDate){
+                            alert("结束日期不能比开始日期小");
+                            return;
+                        }
+                    }
+                    /**
+                     * 正则表达式
+                     *   ^ 匹配开头
+                     *   $ 匹配结尾
+                     *
+                     *     [] 匹配一位字符
+                     *  \d 表示1位数字  / [0-9] /
+                     *  \D 表示1位非数字
+                     *  \W 表示所有的非字符
+                     *  \w 表示匹配所有字符（字母，数字，下划线）
+                     *
+                     *       {n,m} 匹配 n 到 m 次,m 可以不写表示无限
+                     *   * 匹配 0 或者多次
+                     *   + 匹配 1+
+                     *   ？ 匹配 0 1
+                     */
+                    var regExp = /^(([1-9]\d*)|0)$/;
+                    if (!regExp.test(cost)){
+                        alert("成本只能是非负数");
+                        return;
+                    }
+                    $.ajax({
+                        url:"workbench/activity/saveCreateActivity.do",
+                        data:{
+                            owner:owner,
+                            name:name,
+                            startDate:startDate,
+                            endDate:endDate,
+                            cost:cost,
+                            desciption:desciption
+                        },
+                        type:'post',
+                        dataType:'json',
+                        success:function (data) {
+                            if (data.code == 1){
+                                $("#createActivityModal").modal("hide");
+                                $("#createActivityForm").get(0).reset();
+                            }else {
+                                alert(data.message);
+                                $("#createActivityModal").modal("show");
+                            }
+                        }
+                    })
+                });
             });
 
         </script>
@@ -43,7 +109,7 @@
                     </div>
                     <div class="modal-body">
 
-                        <form class="form-horizontal" role="form">
+                        <form id="createActivityForm" class="form-horizontal" role="form">
 
                             <div class="form-group">
                                 <label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span
@@ -91,7 +157,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                        <button type="button" class="btn btn-primary" id="saveCreateActivity">保存</button>
                     </div>
                 </div>
             </div>
@@ -251,18 +317,19 @@
                 <div class="btn-toolbar" role="toolbar"
                      style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
                     <div class="btn-group" style="position: relative; top: 18%;">
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#createActivityModal"><span class="glyphicon glyphicon-plus"></span> 创建
+                        <button type="button" class="btn btn-primary" id="createActivityByButton">
+                            <span class="glyphicon glyphicon-plus"></span> 创建
                         </button>
-                        <button type="button" class="btn btn-default" data-toggle="modal"
-                                data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-pencil"></span> 修改
                         </button>
-                        <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除
+                        <button type="button" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-minus"></span> 删除
                         </button>
                     </div>
                     <div class="btn-group" style="position: relative; top: 18%;">
-                        <button type="button" class="btn btn-default" data-toggle="modal"
-                                data-target="#importActivityModal"><span class="glyphicon glyphicon-import"></span>
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-import"></span>
                             上传列表数据（导入）
                         </button>
                         <button id="exportActivityAllBtn" type="button" class="btn btn-default"><span

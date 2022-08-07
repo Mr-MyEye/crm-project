@@ -42,18 +42,20 @@ public class ActivityController {
         return  "workbench/activity/index";
     }
 
-    @RequestMapping("/saveCreateActivity")
+    @RequestMapping("/saveCreateActivity.do")
     public @ResponseBody Object saveCreateActivity(
             Activity activity,
             HttpSession session
     ){
+        User user=(User) session.getAttribute(Constants.SESSION_USER);
+        //封装参数
         activity.setId(UUIDUtils.getUUID());
         activity.setCreateTime(DateUtils.formateDateTime(new Date()));
-        User user = (User) session.getAttribute(Constants.SESSION_USER);
         activity.setCreateBy(user.getId());
+
         ReturnObject returnObject = new ReturnObject();
         try {
-            int ret = activityService.insert(activity);
+            int ret = activityService.saveCreateActivity(activity);
             if (ret > 0 ){
                 returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
                 return returnObject;

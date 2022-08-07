@@ -13,5 +13,6 @@ public interface ActivityService {
 
     int insert(Activity row);
 
+    int saveCreateActivity(Activity activity);
 
 }

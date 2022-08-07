@@ -52,4 +52,10 @@ public interface ActivityMapper {
      * @mbg.generated Fri Jul 22 14:07:03 CST 2022
      */
     int updateByPrimaryKey(Activity row);
+
+
+    /**
+     * 保存创建的市场活动
+     */
+    int insertActivity(Activity activity);
 }
